@@ -35,6 +35,8 @@ object ShoppingCart {
 
 class ShoppingCartDb[F[_] : Applicative : Sync](priceClient: PriceClient[F]) {
 
+  // The assignment would have been simpler to have priceClient as a seperate thing and feed in the price Map to the DB.
+  // not sure if I have too much of a strong opinion though. In a production case, you cannot load all product details into memory.
   def add(title: String, quantity: Int): StateT[F, ShoppingCart, Unit] = {
     for {
       maybeItemInfo <- StateT.liftF(priceClient.getPrice(title))
